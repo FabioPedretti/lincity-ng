@@ -34,6 +34,7 @@
 #include <fmt/std.h> // IWYU pragma: keep
 #include <type_traits>
 #include <typeinfo>
+#include <tuple>
 
 void unexpectedXmlElement(xmlpp::TextReader& reader) {
   fmt::println(stderr, "warning: skipping unexpected element <{}>",
@@ -200,28 +201,58 @@ std::filesystem::path xmlParse<std::filesystem::path>(const xmlpp::ustring& s) {
   return std::filesystem::path(s);
 }
 
-template const xmlStrF xmlFormat<int>(const int);
-template const xmlStrF xmlFormat<unsigned int>(const unsigned int);
-template const xmlStrF xmlFormat<unsigned short>(const unsigned short);
-template const xmlStrF xmlFormat<std::size_t>(const std::size_t);
-template const xmlStrF xmlFormat<float>(const float);
-template const xmlStrF xmlFormat<bool>(const bool);
-template const xmlStrF xmlFormat<std::string>(const std::string);
-template const xmlStrF
-xmlFormat<std::filesystem::path>(const std::filesystem::path);
+// This is used to instantiate the template functions. Normal explicit template
+// instantiation doesn't work because it doesn't handle duplicates well.
+auto __lincityng_xmlutil_instantiate_templates__() {
+  return std::tuple {
+    xmlFormat<int>,
+    xmlFormat<unsigned int>,
+    xmlFormat<unsigned short>,
+    xmlFormat<std::size_t>,
+    xmlFormat<float>,
+    xmlFormat<bool>,
+    xmlFormat<std::string>,
+    xmlFormat<std::filesystem::path>,
 
-template const xmlStrF xmlFormatHex<int>(const int);
-template const xmlStrF xmlFormatHex<unsigned int>(const unsigned int);
-template const xmlStrF xmlFormatHex<unsigned short>(const unsigned short);
-template const xmlStrF xmlFormatHex<std::size_t>(const std::size_t);
-template const xmlStrF xmlFormatHex<float>(const float);
+    xmlFormatHex<int>,
+    xmlFormatHex<unsigned int>,
+    xmlFormatHex<unsigned short>,
+    xmlFormatHex<std::size_t>,
+    xmlFormatHex<float>,
 
-template int xmlParse<int>(const xmlpp::ustring&);
-template unsigned int xmlParse<unsigned int>(const xmlpp::ustring&);
-template unsigned short xmlParse<unsigned short>(const xmlpp::ustring&);
-template std::size_t xmlParse<std::size_t>(const xmlpp::ustring&);
-template float xmlParse<float>(const xmlpp::ustring&);
-template bool xmlParse<bool>(const xmlpp::ustring&);
-template std::string xmlParse<std::string>(const xmlpp::ustring&);
-template std::filesystem::path
-xmlParse<std::filesystem::path>(const xmlpp::ustring&);
+    xmlParse<int>,
+    xmlParse<unsigned int>,
+    xmlParse<unsigned short>,
+    xmlParse<std::size_t>,
+    xmlParse<float>,
+    xmlParse<bool>,
+    xmlParse<std::string>,
+    xmlParse<std::filesystem::path>,
+  };
+}
+
+// template const xmlStrF xmlFormat<int>(const int);
+// template const xmlStrF xmlFormat<unsigned int>(const unsigned int);
+// template const xmlStrF xmlFormat<unsigned short>(const unsigned short);
+// template const xmlStrF xmlFormat<std::size_t>(const std::size_t);
+// template const xmlStrF xmlFormat<float>(const float);
+// template const xmlStrF xmlFormat<bool>(const bool);
+// template const xmlStrF xmlFormat<std::string>(const std::string);
+// template const xmlStrF
+// xmlFormat<std::filesystem::path>(const std::filesystem::path);
+//
+// template const xmlStrF xmlFormatHex<int>(const int);
+// template const xmlStrF xmlFormatHex<unsigned int>(const unsigned int);
+// template const xmlStrF xmlFormatHex<unsigned short>(const unsigned short);
+// template const xmlStrF xmlFormatHex<std::size_t>(const std::size_t);
+// template const xmlStrF xmlFormatHex<float>(const float);
+//
+// template int xmlParse<int>(const xmlpp::ustring&);
+// template unsigned int xmlParse<unsigned int>(const xmlpp::ustring&);
+// template unsigned short xmlParse<unsigned short>(const xmlpp::ustring&);
+// template std::size_t xmlParse<std::size_t>(const xmlpp::ustring&);
+// template float xmlParse<float>(const xmlpp::ustring&);
+// template bool xmlParse<bool>(const xmlpp::ustring&);
+// template std::string xmlParse<std::string>(const xmlpp::ustring&);
+// template std::filesystem::path
+// xmlParse<std::filesystem::path>(const xmlpp::ustring&);
