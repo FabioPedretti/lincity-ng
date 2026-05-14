@@ -33,19 +33,19 @@ endif()
 
 ### .POT generation
 set(POT_FILES
-  ${CMAKE_BINARY_DIR}/src/lincity-ng/lincity-ng.pot
-  ${CMAKE_BINARY_DIR}/src/lincity/lincity_lib.pot
-  ${CMAKE_BINARY_DIR}/src/lincity/modules/lincity_lib_modules.pot
-  ${CMAKE_BINARY_DIR}/share/lincity-ng/gui/guiXml.pot
+  "${CMAKE_BINARY_DIR}/src/lincity-ng/lincity-ng.pot"
+  "${CMAKE_BINARY_DIR}/src/lincity/lincity_lib.pot"
+  "${CMAKE_BINARY_DIR}/src/lincity/modules/lincity_lib_modules.pot"
+  "${CMAKE_BINARY_DIR}/share/lincity-ng/gui/guiXml.pot"
 )
 foreach(pot ${POT_FILES})
   cmake_path(GET pot FILENAME potname)
-  list(APPEND POT_TARGETS ${potname}.target)
+  list(APPEND POT_TARGETS "${potname}.target")
 endforeach()
 add_custom_command(
   OUTPUT ${CMAKE_BINARY_DIR}/messages.pot
   COMMAND ${GETTEXT_XGETTEXT} -o ${CMAKE_BINARY_DIR}/messages.pot ${POT_FILES}
-  DEPENDS ${POT_TARGETS}
+  DEPENDS ${POT_TARGETS} ${POT_FILES}
   COMMENT "merging messages.pot"
 )
 add_custom_target(generate_pot DEPENDS ${CMAKE_BINARY_DIR}/messages.pot)
