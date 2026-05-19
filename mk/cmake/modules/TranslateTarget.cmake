@@ -25,17 +25,22 @@ function(translate_target target)
     cmake_path(ABSOLUTE_PATH SOURCE_PATH
       BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
+    cmake_path(RELATIVE_PATH SOURCE_PATH
+      BASE_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    )
     list(APPEND TARGET_SOURCES ${SOURCE_PATH})
   endforeach()
   add_custom_command(
     OUTPUT ${target}.pot
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     COMMAND ${GETTEXT_XGETTEXT}
-      --keyword='_:1' --keyword='N_:1' -o ${target}.pot ${TARGET_SOURCES}
-    DEPENDS ${TARGET_SOURCES}
+      --keyword='_:1' --keyword='N_:1'
+      -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.pot" ${TARGET_SOURCES}
+    DEPENDS ${TARGET_SOURCES_REL}
     COMMENT "generating ${target}.pot"
   )
   add_custom_target(${target}.pot.target
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${target}.pot
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${target}.pot"
   )
 endfunction(translate_target)
 
@@ -45,15 +50,22 @@ function(translate_target_xml target its)
     cmake_path(ABSOLUTE_PATH SOURCE_PATH
       BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
+    cmake_path(RELATIVE_PATH SOURCE_PATH
+      BASE_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    )
     list(APPEND TARGET_SOURCES ${SOURCE_PATH})
   endforeach()
   add_custom_command(
     OUTPUT ${target}.pot
-    COMMAND ${GETTEXT_XGETTEXT} --its=${its} -o ${target}.pot ${TARGET_SOURCES}
-    DEPENDS ${TARGET_SOURCES} ${its}
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    COMMAND ${GETTEXT_XGETTEXT}
+      --its=${its}
+      -o "${CMAKE_CURRENT_BINARY_DIR}/${target}.pot"
+      ${TARGET_SOURCES}
+    DEPENDS ${TARGET_SOURCES_REL} ${its}
     COMMENT "generating ${target}.pot"
   )
   add_custom_target(${target}.pot.target
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${target}.pot
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${target}.pot"
   )
 endfunction(translate_target_xml)
