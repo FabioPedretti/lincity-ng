@@ -230,17 +230,19 @@ CheckButton::event(const Event& event) {
       break;
     mpressed = false;
     if(event.inside) {
-      if(event.mousebutton == SDL_BUTTON_LEFT && !mdisabled) {
-        if(mchecked && autoUncheck) {
-          mchecked = false;
-          unchecked(this);
+      if(!mdisabled) {
+        if(event.mousebutton == SDL_BUTTON_LEFT) {
+          if(mchecked && autoUncheck) {
+            mchecked = false;
+            unchecked(this);
+          }
+          else if(!mchecked && autoCheck) {
+            mchecked = true;
+            checked(this);
+          }
         }
-        else if(!mchecked && autoCheck) {
-          mchecked = true;
-          checked(this);
-        }
+        clicked(this, event.mousebutton);
       }
-      clicked(this, event.mousebutton);
     }
     released(this, event.mousebutton);
     setDirty();
